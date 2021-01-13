@@ -1,5 +1,5 @@
-import API
-import Authentication
+import src.API as API
+import src.Authentication as Authentication
 import re
 from validator_collection import validators, checkers, errors
 
@@ -24,6 +24,7 @@ def main():
             raise Exception("Invalid credentials. Please check to make sure you have a valid API key")
 
         print("\nValid Credentials! Calculating similarity of images ... ")
+        image1 = image2 = None
         if (checkers.is_readable(image1_link) and (checkers.is_pathlike(image1_link) or checkers.is_file(image1_link) or checkers.is_on_filesystem(image1_link))):
             image1 = API.readImageFilename(image1_link)
         elif (checkers.is_url(image1_link) or checkers.is_ip_address(image1_link)):
@@ -32,6 +33,8 @@ def main():
             image2 = API.readImageFilename(image2_link)
         elif (checkers.is_url(image2_link) or checkers.is_ip_address(image2_link)):
             image2 = API.readImageURL(image2_link)
+        if (image1 == None or image2 == None):
+            raise Exception("Invalid Image Link(s). Please check to make sure the provided URL/filename is correct")
         percent = API.similarity(image1, image2)
         print("\nThe two images are", percent, "similar!=")
         if (percent < 30):
