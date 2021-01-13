@@ -12,6 +12,9 @@ Allows creator/owner of API to change format of authentication of credentials
 Inputs: String API_key (to ensure owner currently has valid authentication credentials), String format (the updated credential format)
 """
 def set_credential_format(API_Key, format):
+    global credential_format
+    if (validate_credentials(API_key)):
+        credential_format = format
     return
 
 
