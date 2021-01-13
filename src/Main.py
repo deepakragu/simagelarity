@@ -23,26 +23,36 @@ def main():
         if (not valid):
             raise Exception("Invalid credentials. Please check to make sure you have a valid API key")
 
+
         print("\nValid Credentials! Calculating similarity of images ... ")
+        
+
         image1 = image2 = None
-        if (checkers.is_readable(image1_link) and (checkers.is_pathlike(image1_link) or checkers.is_file(image1_link) or checkers.is_on_filesystem(image1_link))):
-            image1 = API.readImageFilename(image1_link)
-        elif (checkers.is_url(image1_link) or checkers.is_ip_address(image1_link)):
+        # if (checkers.is_readable(image1_link) and (checkers.is_pathlike(image1_link) or checkers.is_file(image1_link) or checkers.is_on_filesystem(image1_link))):
+        if (checkers.is_url(image1_link) or checkers.is_ip_address(image1_link)):
             image1 = API.readImageURL(image1_link)
-        if (checkers.is_readable(image2_link) and (checkers.is_pathlike(image2_link) or checkers.is_file(image2_link) or checkers.is_on_filesystem(image2_link))):
-            image2 = API.readImageFilename(image2_link)
-        elif (checkers.is_url(image2_link) or checkers.is_ip_address(image2_link)):
+        else:
+            image1 = API.readImageFilename(image1_link)
+        # if (checkers.is_readable(image2_link) and (checkers.is_pathlike(image2_link) or checkers.is_file(image2_link) or checkers.is_on_filesystem(image2_link))):
+        if (checkers.is_url(image2_link) or checkers.is_ip_address(image2_link)):
             image2 = API.readImageURL(image2_link)
+        else:
+            image2 = API.readImageFilename(image2_link)
         if (image1 == None or image2 == None):
             raise Exception("Invalid Image Link(s). Please check to make sure the provided URL/filename is correct")
+        
+
         percent = API.similarity(image1, image2)
-        print("\nThe two images are", percent, "similar!=")
+
+
+        print("\nThe two images are " + str(percent) + "% similar!")
         if (percent < 30):
             print("Guess these images don't look so similar after all!")
         elif (percent < 60):
             print("I can sort of see the resemblance ...")
         else:
             print("Wow! These two are hard to tell apart!")
+
 
         return
 
