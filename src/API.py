@@ -7,7 +7,7 @@ from PIL import Image
 
 
 """
-Reads an image url into an image object
+Reads an image url into an image object (Example image URL: https://static.toiimg.com/photo/72975551.cms)
 Input: url of image on internet
 Output: image object
 """
