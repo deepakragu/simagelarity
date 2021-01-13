@@ -1,2 +1,2 @@
 default:
-	python3 script.py
+	python3 src/script.py

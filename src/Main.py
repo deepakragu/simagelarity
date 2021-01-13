@@ -1,5 +1,5 @@
-import src.API as API
-import src.Authentication as Authentication
+import API
+import Authentication
 import re
 from validator_collection import validators, checkers, errors
 

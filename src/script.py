@@ -1,2 +1,2 @@
-import src.Main as Main
+import Main
 Main.main()
