@@ -2,12 +2,15 @@ import API
 import Authentication
 import re
 from validator_collection import validators, checkers, errors
+import json
+
 
 
 """
 Main Method: Runs all other methods in this file and in other classes
 """
 def main():
+    print("===========================================================================")
     print("Hello User! Welcome to SImageLarity, a simple API that calculates the similarity level of two images!")
     ready_to_use = input("\nTo get started, make sure you have filled out input.txt. Press (y) when you are ready to continue: ")
     while (ready_to_use != "y"):
@@ -25,7 +28,7 @@ def main():
 
 
         print("\nValid Credentials! Calculating similarity of images ... ")
-        
+        print(image1_link, "vs.", image2_link)
 
         image1 = image2 = None
         # if (checkers.is_readable(image1_link) and (checkers.is_pathlike(image1_link) or checkers.is_file(image1_link) or checkers.is_on_filesystem(image1_link))):
@@ -38,12 +41,11 @@ def main():
             image2 = API.readImageURL(image2_link)
         else:
             image2 = API.readImageFilename(image2_link)
-        if (image1 == None or image2 == None):
+        if (image1 is None or image2 is None or image1 == [] or image2 == []):
             raise Exception("Invalid Image Link(s). Please check to make sure the provided URL/filename is correct")
         
-
-        percent = API.similarity(image1, image2)
-
+        API_Call = json.loads(API.similarity(image1, image2))
+        percent = API_Call["similarity"]
 
         print("\nThe two images are " + str(percent) + "% similar!")
         if (percent < 30):
@@ -54,6 +56,7 @@ def main():
             print("Wow! These two are hard to tell apart!")
 
 
+        print("===========================================================================")
         return
 
     except Exception as inst:
