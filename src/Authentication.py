@@ -25,7 +25,6 @@ Output: True if valid
 """
 def validate_credentials(API_key):
     global credential_format
-
     return re.match(credential_format, API_key)
 
     

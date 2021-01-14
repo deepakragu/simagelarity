@@ -3,29 +3,57 @@ API Code to calculate how similar two images are
 Author: Deepak Ragu
 """
 import json
-
-from PIL import Image                                                                                
-import requests
-from io import BytesIO
-import imagehash
 import os
 import cv2
-
-from skimage import measure
-
-import matplotlib.pyplot as plt
 import numpy as np
+import urllib
+from validator_collection import validators, checkers, errors
+
 
 
 
 
 """
-Reads an image url into an image object (Example image URL: https://static.toiimg.com/photo/72975551.cms)
+Runs the necessary methods of this API class to produce desired output
+Input: URL/Filepaths to images
+Output: JSON Object
+"""
+def runner(image1_link, image2_link):
+
+   
+   print("Comparing", image1_link, "vs.", image2_link)
+
+
+   image1 = image2 = None
+   if (checkers.is_url(image1_link) or checkers.is_ip_address(image1_link)):
+      image1 = readImageURL(image1_link)
+   else:
+      image1 = readImageFilename(image1_link)
+   if (checkers.is_url(image2_link) or checkers.is_ip_address(image2_link)):
+      image2 = readImageURL(image2_link)
+   else:
+      image2 = readImageFilename(image2_link)
+   if (image1 is None or image2 is None or image1 == [] or image2 == []):
+      raise Exception("Invalid Image Link(s). Please check to make sure the provided URL/filename is correct")
+
+
+   return similarity(image1, image2)
+   
+
+
+"""
+Reads an image url into an image object
 Input: url of image on internet
 Output: image object
 """
 def readImageURL(url):
-   return readURLMethod1(url)
+   # download the image, convert it to a NumPy array, and then read
+	# it into OpenCV format
+	resp = urllib.request.urlopen(url)
+	image = np.asarray(bytearray(resp.read()), dtype="uint8")
+	image = cv2.imdecode(image, cv2.IMREAD_COLOR)
+	# return the image
+	return image
 
 
 
@@ -35,16 +63,19 @@ Input: local filname of image
 Output: image object
 """
 def readImageFilename(filename):
-   return readFilenameMethod2(filename)
+   cwd = os.getcwd()
+   filepath = cwd + '/images/user_images/' + filename 
+   img = cv2.imread(filepath, 0)
+   return img
    
 
 
 """
 Given two images, calculates how similar the images are
 Input: Image1, Image2 (two image objects)
-Output: Double (Similarity, as a percentage)
+Output: JSON Object containing percentage (can be accessed by accessing "similarity")
 """
-def similarity(image1, image2):
+def similarity(image_1, image_2):
    first_image_hist = cv2.calcHist([image_1], [0], None, [256], [0, 256])
    second_image_hist = cv2.calcHist([image_2], [0], None, [256], [0, 256])
 
@@ -55,7 +86,7 @@ def similarity(image1, image2):
    print(img_template_diff)
 
    # Taking weighted sum of the two methods
-   commutative_image_diff = 0.3 * img_hist_diff + 0.7 * img_template_diff
+   commutative_image_diff = 0.25 * img_hist_diff + 0.75 * img_template_diff
    
    percent = int(commutative_image_diff * 100)
 
@@ -63,180 +94,6 @@ def similarity(image1, image2):
    json_object = json.dumps(data)   
    return json_object
    
-
-
-
-
-
-
-
-
-def readURLMethod1(url):
-   response = requests.get(url)
-   img = Image.open(BytesIO(response.content))
-   return img
-
-"""
-For regular filepath and PIL images to be used with imagehash
-"""
-def readFilenameMethod1(filename):
-   cwd = os.getcwd()
-   filepath = cwd + '/images/sample_images/' + filename #ToDo: Make sure to change the directory for this line to user_images
-   return Image.open(filepath) 
-
-"""
-Regular imagehash method
-"""
-def similarityMethod1(image1, image2):
-   hash = imagehash.average_hash(image1)
-   otherhash = imagehash.average_hash(image2)
-   # image1.show() 
-   # image2.show() 
-   return hash - otherhash
-
-
-
-"""
-For OpenCV Images
-"""
-def readURLMethod1(url):
-   response = requests.get(url)
-   img = Image.open(BytesIO(response.content))
-   return img
-
-
-"""
-For OpenCV images
-"""
-def readFilenameMethod2(filename):
-   cwd = os.getcwd()
-   filepath = cwd + '/images/sample_images/' + filename #ToDo: Make sure to change the directory for this line to user_images
-   img = cv2.imread(filepath, 0)
-   return img
-
-"""
-OpenCV + histogram technique
-"""
-def similarityMethod2(image_1, image_2):
-   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-def readURLMethod3(url):
-   response = requests.get(url)
-   img = Image.open(BytesIO(response.content))
-   return img
-
-"""
-OpenCV read with SSIM and MSE
-"""
-def readFilenameMethod3(filename):
-   cwd = os.getcwd()
-   filepath = cwd + '/images/sample_images/' + filename #ToDo: Make sure to change the directory for this line to user_images
-   img = cv2.imread(filepath)
-   img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-   return img
-
-
-"""
-OpenCV with MSE and SSIM method
-"""
-def similarityMethod3(original, contrast):
-   return compare_images(original, contrast)
-
-
-def mse(imageA, imageB):
-	# the 'Mean Squared Error' between the two images is the
-	# sum of the squared difference between the two images;
-	# NOTE: the two images must have the same dimension
-	err = np.sum((imageA.astype("float") - imageB.astype("float")) ** 2)
-	err /= float(imageA.shape[0] * imageA.shape[1])
-	
-	# return the MSE, the lower the error, the more "similar"
-	# the two images are
-	return err
-def compare_images(imageA, imageB):
-	# compute the mean squared error and structural similarity
-	# index for the images
-	# m = mse(imageA, imageB)
-	s = measure.compare_ssim(imageA, imageB)
-	return int(s*100)
-   
-
-
-
-
-
-
-
-
-
-
-
-"""
-For OpenCV images
-"""
-def readFilenameMethod4(filename):
-   cwd = os.getcwd()
-   filepath = cwd + '/images/sample_images/' + filename #ToDo: Make sure to change the directory for this line to user_images
-   img = cv2.imread(filepath, 0)
-   return img
-
-"""
-OpenCV technique
-"""
-def similarityMethod4(image_1, image_2):
-   sift = cv2.xfeatures2d.SIFT_create()
-   kp_1, desc_1 = sift.detectAndCompute(image_1, None)
-   kp_2, desc_2 = sift.detectAndCompute(image_2, None)
-   index_params = dict(algorithm=0, trees=5)
-   search_params = dict()
-   flann = cv2.FlannBasedMatcher(index_params, search_params)
-   matches = flann.knnMatch(desc_1, desc_2, k=2)
-   good_points = []
-   ratio = 0.6 # If you decrease the ratio value, for example to 0.1 you will get really high quality matches, but the downside is that you will get only few matches.
-   for m, n in matches:
-      if m.distance < ratio*n.distance:
-         good_points.append(m)
-         # print(len(good_points))
-   result = cv2.drawMatches(image_1, kp_1, image_2, kp_2, good_points, None)
-   number_keypoints = 0
-   if len(kp_1) <= len(kp_2):
-      number_keypoints = len(kp_1)
-   else:
-      number_keypoints = len(kp_2)
-   # print("Keypoints 1ST Image: " + str(len(kp_1)))
-   # print("Keypoints 2ND Image: " + str(len(kp_2)))
-   return (len(good_points) / number_keypoints) * 100
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

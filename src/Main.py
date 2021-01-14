@@ -1,7 +1,6 @@
 import API
 import Authentication
 import re
-from validator_collection import validators, checkers, errors
 import json
 
 
@@ -28,25 +27,10 @@ def main():
 
 
         print("\nValid Credentials! Calculating similarity of images ... ")
-        print(image1_link, "vs.", image2_link)
+        API_Call = json.loads(API.runner(image1_link, image2_link))
 
-        image1 = image2 = None
-        # if (checkers.is_readable(image1_link) and (checkers.is_pathlike(image1_link) or checkers.is_file(image1_link) or checkers.is_on_filesystem(image1_link))):
-        if (checkers.is_url(image1_link) or checkers.is_ip_address(image1_link)):
-            image1 = API.readImageURL(image1_link)
-        else:
-            image1 = API.readImageFilename(image1_link)
-        # if (checkers.is_readable(image2_link) and (checkers.is_pathlike(image2_link) or checkers.is_file(image2_link) or checkers.is_on_filesystem(image2_link))):
-        if (checkers.is_url(image2_link) or checkers.is_ip_address(image2_link)):
-            image2 = API.readImageURL(image2_link)
-        else:
-            image2 = API.readImageFilename(image2_link)
-        if (image1 is None or image2 is None or image1 == [] or image2 == []):
-            raise Exception("Invalid Image Link(s). Please check to make sure the provided URL/filename is correct")
-        
-        API_Call = json.loads(API.similarity(image1, image2))
+
         percent = API_Call["similarity"]
-
         print("\nThe two images are " + str(percent) + "% similar!")
         if (percent < 30):
             print("Guess these images don't look so similar after all!")
@@ -57,6 +41,8 @@ def main():
 
 
         print("===========================================================================")
+
+
         return
 
     except Exception as inst:
