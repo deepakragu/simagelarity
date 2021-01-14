@@ -4,7 +4,7 @@
 API that outputs similarity of two images (percentage)
 
 ## Usage
-First, download this project or pull the code locally using `git clone https://github.com/deepakragu/simagelarity.git`
+First, download this project or pull the code locally using `git clone https://github.com/deepakragu/simagelarity.git`. Make sure to have validator collection and OpenCV installed (if not, run the pip install validator-collection, pip3 install opencv-python, and pip install opencv-contrib-python commands in your terminal)
 
 Next, fill out `input.txt` with your API Credentials along with the URLs/filenames of the two images you would like to compare. Edit `input.txt` by adding your API key (as this is a demo, any string consisting of a character followed by 3 numeric values followed by 3 characters (ex: 6bTh072) will be considered as valid authentication) followed by entering the URLs or filenames of the two images you would like to compare. If you are using local images, add these images in the `images/user_images` subdirectory.
 
