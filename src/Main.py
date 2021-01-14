@@ -12,6 +12,7 @@ app.config["DEBUG"] = True
 
 """
 Main Method: Runs all other methods in this file and in other classes
+Open Endpoint that can be accessed through GET requests and cURL
 """
 @app.route('/similarity', methods=['GET'])
 def main():
@@ -28,15 +29,19 @@ def main():
     except Exception as inst:
         s = str(inst)
     return s
-        # return "<h1>S(Image)larity</h1><p>===========================================================================</p><p>Hello User! Welcome to SImageLarity, a simple API that calculates the similarity level of two images!</p><p>"+ s +"</p>"
 
     
     
 
-
+"""
+Flask App Runner
+"""
 def run_app():
     app.run()
 
+"""
+Flask 404 error handler
+"""
 @app.errorhandler(404)
 def page_not_found(e):
     return "<h1>404</h1><p>The resource could not be found.</p>", 404
@@ -46,14 +51,6 @@ def page_not_found(e):
 
 
 
-"""
-Shutfown server if invalid credentials
-"""
-def shutdown_server():
-    func = request.environ.get('werkzeug.server.shutdown')
-    if func is None:
-        raise RuntimeError('Not running with the Werkzeug Server')
-    func()
 
 """
 If users would like to use API from command line and using input.txt files
