@@ -20,7 +20,7 @@ Output: JSON Object
 """
 def runner(image1_link, image2_link):
 
-   
+
    print("Comparing", image1_link, "vs.", image2_link)
 
 
@@ -80,10 +80,8 @@ def similarity(image_1, image_2):
    second_image_hist = cv2.calcHist([image_2], [0], None, [256], [0, 256])
 
    img_hist_diff = cv2.compareHist(first_image_hist, second_image_hist, cv2.HISTCMP_BHATTACHARYYA)
-   print(img_hist_diff)
    img_template_probability_match = cv2.matchTemplate(first_image_hist, second_image_hist, cv2.TM_CCOEFF_NORMED)[0][0]
    img_template_diff = abs(img_template_probability_match)
-   print(img_template_diff)
 
    # Taking weighted sum of the two methods
    commutative_image_diff = 0.25 * img_hist_diff + 0.75 * img_template_diff
