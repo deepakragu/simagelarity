@@ -11,5 +11,5 @@ If you would like to run this API locally (i.e. have textual output on your term
 Finally, open a terminal window or bash script and run make in the simagelarity module/folder, and follow any other instructions displayed (instructions may be repeated)
 
 ## Details + Implementation
-For full details (including design workflow), visit https://www.dropbox.com/scl/fi/yn5d795u8cx3trbr7xnyl/S-Image-larity.paper?dl=0&rlkey=apkgapg2u5vsnq0x2v4o4q33f
+For full details (including design workflow and documentation), visit https://www.dropbox.com/scl/fi/yn5d795u8cx3trbr7xnyl/S-Image-larity.paper?dl=0&rlkey=apkgapg2u5vsnq0x2v4o4q33f
 
