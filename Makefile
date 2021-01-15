@@ -1,3 +1,3 @@
 default:
 	clear
-	python3 src/script.py
+	python3 DyNotify.py
