@@ -93,5 +93,12 @@ def run(server_class=HTTPServer, handler_class=DyNotify, addr="localhost", port=
     httpd.serve_forever()
 
 if __name__ == "__main__":
+    print("\n===========================================================================")
+    print("\nIf you would like to make a GET request, please open a new command prompt and curl your url")
+    print("\nThe URL you use to make a get request should formatted as follows: http://127.0.0.1:5000/similarity?key=YOUR_API_KEY&image1=IMAGE_URL_OR_FILENAME&image2=IMAGE_URL_OR_FILENAME")
+    print("\nExample GET request: curl \"http://127.0.0.1:5000/similarity?key=6bch723&image1=rose2.jpeg&image2=rose3.jpeg\"")
+    print("\nYou may make as many curl requests as you would like")
+    print("\nTo Quit, enter control+c in this command prompt")
+    print()
     parser = argparse.ArgumentParser(description="Run a simple HTTP server")
     run()
